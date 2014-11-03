@@ -37,11 +37,11 @@ class _Main {
 ### Use from node.js
 
 ```js
-var xxhash = require('xxhash.common.js').xxhash;
+var xxhash = require('xxhash.common.js');
 var fs = require('fs');
 
 var buffer = fs.readFileSync('inputfile.txt');
-var hash = xxhash.BufferXXH.digestHex(buffer, 0xabcd);
+var hash = xxhash.XXH.digestHex(buffer, 0xabcd);
 console.log(hash);
 ```
 
@@ -50,7 +50,7 @@ console.log(hash);
 ```js
 // use xxhash.amd.js
 define(['xxhash'], function (xxhash) {
-    var hash = xxhash.StringXXH.digest('input string', 0x1111);
+    var hash = xxhash.XXH.digest('input string', 0x1111);
 });
 ```
 
@@ -60,9 +60,7 @@ define(['xxhash'], function (xxhash) {
 <script src="xxhash.global.js" type="text/javascript"></script>
 <script type="text/javascript">
 window.onload = function () {
-    var obj = new StringXXH(0x9876);
-    obj.update('content string');
-    alert(obj.digestHex());
+    alert(XXH.digestHex('content', 0xabcd));
 });
 </script>
 ```
@@ -80,42 +78,54 @@ If you want to use this library from other JSX project, install like the followi
 $ npm install xxhash.jsx --save-dev
 ```
 
-API Reference
-------------------
+API Reference for JS
+--------------------
 
-There are three classes in this module;
+For JavaScript environment, it provides entrypoint "XXH". It provides static methods to calculate XXHASH.
 
-* class StringXXH
-* class ArrayBufferXXH
-* class BufferXXH
-
-All classes have same methods
-
-## static function digest(input : inputtype,  seed : number) : number
+### XXH.digest(input : string/ArrayBuffer, seed : number) : number
 
 It returns calculated hash value as number.
 
-## static function digestHex(input : inputtype,  seed : number) : string
+### XXH.digestHex(input : string/ArrayBuffer, seed : number) : string
 
 It returns calculated hash value as hex string.
 
-## function constructor(seed : number)
+API Reference for JSX
+---------------------
+
+In addition to XXH class, there are two classes in this module;
+
+* class StringXXH
+* class ArrayBufferXXH
+
+All classes have same methods
+
+### static function digest(input : inputtype,  seed : number) : number
+
+It returns calculated hash value as number.
+
+### static function digestHex(input : inputtype,  seed : number) : string
+
+It returns calculated hash value as hex string.
+
+### function constructor(seed : number)
 
 Initialize hash calculator object.
 
-## function update(input : inputtype) : self
+### function update(input : inputtype) : self
 
 Add input. This method can be called multipul times.
 
-## function digest() : number
+### function digest() : number
 
 It returns calculated hash as number.
 
-## function digestHex() : string
+### function digestHex() : string
 
 It returns calculated hash as string.
 
-## function init(seed : number) : void
+### function init(seed : number) : void
 
 Initialize object content.
 
