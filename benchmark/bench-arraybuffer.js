@@ -1,7 +1,7 @@
 var fs = require('fs');
 var path = require('path');
 var Benchmark = require('benchmark');
-var xxhash = require('../dest/xxhash.common.js');
+var xxhash = require('../dest/xxhash_wrapper.common.js');
 var inputFileName = path.normalize( process.argv[2] || __dirname + '/lorem_1mb.txt' )
 console.log('Input file:', inputFileName)
 
