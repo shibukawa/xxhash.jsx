@@ -1,5 +1,5 @@
 import "console.jsx";
-import "src/xxhash.jsx";
+import "../src/xxhash.jsx";
 import "js/nodejs.jsx";
 
 class _Main {
@@ -8,10 +8,12 @@ class _Main {
         var input = new Uint32Array(inputBuffer as __noconvert__ ArrayBuffer).buffer;
         var seed = 0xABCD;
 
+        var start = Date.now();
         for (var i = 0; i < 60; i++) {
 	        XXH.digest(input, seed);
         }
+        console.log("time:", Date.now() - start);
 
-        JSX.postProfileResults("http://localhost:2012/post-profile");
+        //JSX.postProfileResults("http://localhost:2012/post-profile");
     }
 }
