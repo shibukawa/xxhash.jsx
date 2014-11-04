@@ -83,11 +83,11 @@ API Reference for JS
 
 For JavaScript environment, it provides entrypoint "XXH". It provides static methods to calculate XXHASH.
 
-### XXH.digest(input : string/ArrayBuffer, seed : number) : number
+### XXH.digest(input : string/ArrayBuffer/Uint8Array, seed : number) : number
 
 It returns calculated hash value as number.
 
-### XXH.digestHex(input : string/ArrayBuffer, seed : number) : string
+### XXH.digestHex(input : string/ArrayBufferUint8Array, seed : number) : string
 
 It returns calculated hash value as hex string.
 
@@ -99,7 +99,7 @@ In addition to XXH class, there are two classes in this module;
 * class StringXXH
 * class ArrayBufferXXH
 
-All classes have same methods
+All classes have same methods. ArrayBufferXXH supports Uint8Array as input in addition to ArrayBuffer.
 
 ### static function digest(input : inputtype,  seed : number) : number
 

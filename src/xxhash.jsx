@@ -6,6 +6,8 @@ __export__ class XXH {
             return StringXXH.digest(source as string, seed);
         } else if (source instanceof ArrayBuffer) {
             return ArrayBufferXXH.digest(source as ArrayBuffer, seed);
+        } else if (source instanceof Uint8Array) {
+            return ArrayBufferXXH.digest(source as Uint8Array, seed);
         }
         return -1;
     }
@@ -15,6 +17,8 @@ __export__ class XXH {
             return StringXXH.digestHex(source as string, seed);
         } else if (source instanceof ArrayBuffer) {
             return ArrayBufferXXH.digestHex(source as ArrayBuffer, seed);
+        } else if (source instanceof Uint8Array) {
+            return ArrayBufferXXH.digestHex(source as Uint8Array, seed);
         }
         return '';
     }
@@ -122,6 +126,16 @@ class ArrayBufferXXH {
         return xxh.update(input).digestHex();
     }
 
+    static function digest(input : Uint8Array, seed : number) : number {
+        var xxh = new ArrayBufferXXH(seed);
+        return xxh.update(input).digest();
+    }
+
+    static function digestHex(input : Uint8Array, seed : number) : string {
+        var xxh = new ArrayBufferXXH(seed);
+        return xxh.update(input).digestHex();
+    }
+
     function constructor(seed : number) {
         this.init(seed);
     }
@@ -139,10 +153,13 @@ class ArrayBufferXXH {
         this._result = 0x1ffffffff;
     }
 
-    function update(inputArray : ArrayBuffer) : ArrayBufferXXH {
+    function update(input : ArrayBuffer) : ArrayBufferXXH {
+        return this.update(new Uint8Array(input));
+    }
+
+    function update(input : Uint8Array) : ArrayBufferXXH {
         this._result = 0x1ffffffff;
         var p : int = 0;
-        var input = new Uint8Array(inputArray);
         var len : int = input.length;
         var bEnd : int = p + len;
         if (len == 0) {
@@ -438,4 +455,3 @@ class StringXXH {
         return this._result;
     }
 }
-

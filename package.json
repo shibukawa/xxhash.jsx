@@ -1,6 +1,6 @@
 {
   "name": "xxhash.jsx",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "JSX implementation of very fast hasing algorithm xxHash.",
   "scripts": {
     "build": "./node_modules/.bin/grunt build",
@@ -20,7 +20,7 @@
     "nodejs",
     "browser"
   ],
-  "main": "./lib/xxhash.jsx",
+  "main": "./src/xxhash.jsx",
   "homepage": "https://github.com/shibukawa/xxhash.jsx",
   "bugs": {
     "url": "https://github.com/shibukawa/xxhash.jsx/issues"
