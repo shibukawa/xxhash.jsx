@@ -24,6 +24,25 @@ __export__ class XXH {
     }
 }
 
+native class _XXHMath {
+    static function mul(left : number, right : number) : number;
+} = '''(function () {
+    if (Math.imul) {
+        return { mul: Math.imul };
+    } else {
+        return { mul: function (a, b) {
+            var ah  = (a >>> 16) & 0xffff;
+            var al = a & 0xffff;
+            var bh  = (b >>> 16) & 0xffff;
+            var bl = b & 0xffff;
+            // the shift by 0 fixes the sign on the high part
+            // the final |0 converts the unsigned value into a signed value
+            return ((al * bl) + (((ah * bl + al * bh) << 16) >>> 0)|0);
+        }};
+    }
+})();
+''';
+
 class _XXH {
     static const PRIME32_1      : number = 2654435761;
     static const PRIME32_2      : number = 2246822519;
@@ -42,23 +61,6 @@ class _XXH {
 
     inline static function fromBits(low : number, high : number) : number {
         return (((high | 0) << 16) | (low | 0));
-    }
-
-    inline static function mul(left : number, right : number) : number {
-		var a16 = _XXH.high(left);
-		var a00 = _XXH.low(left);
-		var b16 = _XXH.high(right);
-		var b00 = _XXH.low(right);
-
-		var c16, c00;
-		c00 = a00 * b00;
-		c16 = c00 >>> 16;
-
-		c16 += a16 * b00;
-		c16 &= 0xFFFF; // Not required but improves performance
-		c16 += a00 * b16;
-
-        return _XXH.fromBits(c00 & 0xFFFF, c16 & 0xFFFF);
     }
 
     inline static function rotl(v : number, n : int) : number {
@@ -265,21 +267,21 @@ class ArrayBufferXXH {
                 (input[p+1] << 8) | input[p]
               , (input[p+3] << 8) | input[p+2]
             );
-            h32 = _XXH.mul(_XXH.rotl(h32 + _XXH.mul(u, _XXH.PRIME32_3), 17), _XXH.PRIME32_4);
+            h32 = _XXHMath.mul(_XXH.rotl(h32 + _XXHMath.mul(u, _XXH.PRIME32_3), 17), _XXH.PRIME32_4);
             p += 4;
         }
 
         while (p < bEnd)
         {
             u = input[p++];
-            h32 = _XXH.mul(_XXH.rotl((h32 + u * _XXH.PRIME32_5) & 0xffffffff, 11), _XXH.PRIME32_1);
+            h32 = _XXHMath.mul(_XXH.rotl((h32 + u * _XXH.PRIME32_5) & 0xffffffff, 11), _XXH.PRIME32_1);
         }
 
 		h = h32 >>> 15;
-        h32 = _XXH.mul(h32 ^ h, _XXH.PRIME32_2);
+        h32 = _XXHMath.mul(h32 ^ h, _XXH.PRIME32_2);
 
 		h = h32 >>> 13;
-        h32 = _XXH.mul(h32 ^ h, _XXH.PRIME32_3);
+        h32 = _XXHMath.mul(h32 ^ h, _XXH.PRIME32_3);
 
         h = h32 >>> 16;
 		this._result = h32 ^ h;
@@ -434,21 +436,21 @@ class StringXXH {
                 (input.charCodeAt(p+1) << 8) | input.charCodeAt(p)
             ,   (input.charCodeAt(p+3) << 8) | input.charCodeAt(p+2)
             );
-            h32 = _XXH.mul(_XXH.rotl(h32 + _XXH.mul(u, _XXH.PRIME32_3), 17), _XXH.PRIME32_4);
+            h32 = _XXHMath.mul(_XXH.rotl(h32 + _XXHMath.mul(u, _XXH.PRIME32_3), 17), _XXH.PRIME32_4);
             p += 4;
         }
 
         while (p < bEnd)
         {
             u = input.charCodeAt(p++);
-            h32 = _XXH.mul(_XXH.rotl((h32 + u * _XXH.PRIME32_5) & 0xffffffff, 11), _XXH.PRIME32_1);
+            h32 = _XXHMath.mul(_XXH.rotl((h32 + u * _XXH.PRIME32_5) & 0xffffffff, 11), _XXH.PRIME32_1);
         }
 
 		h = h32 >>> 15;
-        h32 = _XXH.mul(h32 ^ h, _XXH.PRIME32_2);
+        h32 = _XXHMath.mul(h32 ^ h, _XXH.PRIME32_2);
 
 		h = h32 >>> 13;
-        h32 = _XXH.mul(h32 ^ h, _XXH.PRIME32_3);
+        h32 = _XXHMath.mul(h32 ^ h, _XXH.PRIME32_3);
 
         h = h32 >>> 16;
 		this._result = h32 ^ h;
